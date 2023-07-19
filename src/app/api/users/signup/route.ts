@@ -2,7 +2,7 @@
 import connect from '@/dbConfig/dbConfig';
 import User from '@/models/userModel';
 import { NextRequest,NextResponse  } from 'next/server';
-import bcryptjs from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 
 
 // Function for POST request
@@ -47,7 +47,7 @@ connect();
 export async function POST(request: NextRequest){
 
     const reqBody = request.json();
-    const {username, email , password }:any = reqBody;
+    const {username, email , password }:any = await reqBody;
     
 
     // Check if user already exists
@@ -58,8 +58,8 @@ export async function POST(request: NextRequest){
     }
     else{
         //Hashing the password
-        const salt = await bcryptjs.genSalt(10);
-        const hashedPassword = await bcryptjs.hash(password, salt )
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt )
 
         // Creating a new user
         const creatUser =  new User({username:username, email:email, password:hashedPassword})
